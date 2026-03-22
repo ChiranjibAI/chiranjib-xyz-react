@@ -7,13 +7,14 @@ export async function synthesizeSpeech(text: string): Promise<Buffer | null> {
 
   try {
     // Use Gemini 1.5 Flash TTS endpoint
+    // gemini-2.5-flash-preview-tts supports AUDIO responseModality
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: `Convert this text to speech naturally: ${text}` }] }],
+          contents: [{ parts: [{ text }] }],
           generationConfig: {
             responseModalities: ['AUDIO'],
             speechConfig: {

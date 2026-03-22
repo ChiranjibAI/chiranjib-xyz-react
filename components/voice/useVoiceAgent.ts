@@ -11,14 +11,29 @@ export interface UseVoiceAgentReturn {
   stop: () => void
 }
 
-function speakWithBrowser(text: string): void {
+function loadVoices(): Promise<SpeechSynthesisVoice[]> {
+  return new Promise((resolve) => {
+    const voices = window.speechSynthesis.getVoices()
+    if (voices.length > 0) {
+      resolve(voices)
+    } else {
+      window.speechSynthesis.onvoiceschanged = () => {
+        resolve(window.speechSynthesis.getVoices())
+      }
+      // Fallback timeout in case onvoiceschanged never fires (some browsers)
+      setTimeout(() => resolve(window.speechSynthesis.getVoices()), 1000)
+    }
+  })
+}
+
+async function speakWithBrowser(text: string): Promise<void> {
   if (typeof window === 'undefined' || !window.speechSynthesis) return
   const utterance = new SpeechSynthesisUtterance(text)
   utterance.rate = 0.95
   utterance.pitch = 1.0
   utterance.volume = 1.0
-  // Try to use a good English voice
-  const voices = window.speechSynthesis.getVoices()
+  // Load voices async — first call often returns empty array
+  const voices = await loadVoices()
   const preferred =
     voices.find((v) => v.lang === 'en-US' && v.name.includes('Google')) ||
     voices.find((v) => v.lang === 'en-US') ||
@@ -92,7 +107,7 @@ export function useVoiceAgent(): UseVoiceAgentReturn {
             return
           }
           setStatus('playing')
-          speakWithBrowser(data.text)
+          await speakWithBrowser(data.text)
 
           // Poll speechSynthesis to detect when speaking ends
           const pollInterval = setInterval(() => {
