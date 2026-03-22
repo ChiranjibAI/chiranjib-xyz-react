@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function ServiceDemosPage() {
   // Group services by category
-  const allServices = SERVICE_DEMO_DATA as unknown as ServiceDemoProps[]
+  const allServices = Object.values(SERVICE_DEMO_DATA)
   const grouped = allServices.reduce<Record<string, ServiceDemoProps[]>>(
     (acc: Record<string, ServiceDemoProps[]>, service: ServiceDemoProps) => {
       const cat = service.category

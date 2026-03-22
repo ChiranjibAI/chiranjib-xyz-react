@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'
 import { Player } from '@remotion/player'
 import { getServiceData } from '@/lib/serviceData'
 import type { ComponentType } from 'react'
-import type { ServiceDemoProps } from '@/components/remotion/ServiceDemoComposition'
 
 // Dynamic import — SSR safe
 const ServiceDemoComp = dynamic(

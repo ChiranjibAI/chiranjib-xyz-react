@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import AboutTimeline from '@/components/sections/AboutTimeline'
 import AvatarOrb from '@/components/ui/AvatarOrb'
 import AboutHeroHeading from '@/components/sections/AboutHeroHeading'

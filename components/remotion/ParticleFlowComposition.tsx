@@ -6,7 +6,6 @@
 import { useMemo } from 'react'
 import { useCurrentFrame, useVideoConfig } from 'remotion'
 import { ThreeCanvas } from '@remotion/three'
-import * as THREE from 'three'
 
 // ── Seeded pseudo-random (deterministic) ──────────────────────────────────────
 function seededRandom(seed: number): number {

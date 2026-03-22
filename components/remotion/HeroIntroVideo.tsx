@@ -1,6 +1,6 @@
 'use client'
 import {
-  useCurrentFrame, useVideoConfig, interpolate, spring, Easing,
+  useCurrentFrame, useVideoConfig, interpolate, spring,
   AbsoluteFill, Sequence,
 } from 'remotion'
 

@@ -421,17 +421,13 @@ function Scene1({
 // ── Scene 2: PAIN POINT ────────────────────────────────────────────────────────
 function Scene2({
   problem,
-  category,
   painTags,
 }: {
   problem: string
-  category: string
   painTags: string[]
 }) {
   const frame = useCurrentFrame()
   const { fps } = useVideoConfig()
-  const c = getCategoryColor(category)
-
   // "THE PROBLEM" label
   const labelOpacity = interpolate(frame, [0, 12], [0, 1], {
     extrapolateRight: 'clamp',
@@ -1310,7 +1306,7 @@ export function ServiceDemoComposition(props: Partial<ServiceDemoProps>) {
       />
 
       <TransitionSeries.Sequence durationInFrames={78}>
-        <Scene2 problem={merged.problem} category={merged.category} painTags={merged.painTags} />
+        <Scene2 problem={merged.problem} painTags={merged.painTags} />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition

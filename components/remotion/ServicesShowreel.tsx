@@ -1,5 +1,5 @@
 'use client'
-import { useCurrentFrame, useVideoConfig, interpolate, spring, AbsoluteFill, Sequence } from 'remotion'
+import { useCurrentFrame, useVideoConfig, interpolate, spring, AbsoluteFill } from 'remotion'
 
 // ── SplitText: per-letter unique animations ───────────────────────────────────
 type LetterAnimStyle = 'bounce' | 'flip' | 'skew' | 'scale' | 'slide' | 'wave' | 'drop'
