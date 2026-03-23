@@ -1502,49 +1502,55 @@ const Scene8CTA: React.FC<{ durationInFrames: number }> = () => {
 }
 
 // ─── Master composition ───────────────────────────────────────────────────────
+// Durations: 660+840+900+1950+2550+1200+660+380 = 9140 scenes - 7×20 transitions = 9000f exactly
 export const MasterDemoComposition: React.FC = () => {
-  const TRANSITION_DURATION = 20
-
   const timing = springTiming({
-    durationInFrames: TRANSITION_DURATION,
+    durationInFrames: 20,
     config: { damping: 200, stiffness: 80 },
   })
-
-  const transition = slide({ direction: 'from-right' })
-
-  // Adjusted durations: total scenes = 9140f, minus 7 * 20f transitions = 9000f
-  const scenes: Array<{ component: React.FC<{ durationInFrames: number }>; duration: number; }> = [
-    { component: Scene1Hook, duration: 660 },
-    { component: Scene2Pain, duration: 840 },
-    { component: Scene3Solution, duration: 900 },
-    { component: Scene4Services, duration: 1950 },
-    { component: Scene5Demo, duration: 2550 },
-    { component: Scene6Proof, duration: 1200 },
-    { component: Scene7Pricing, duration: 660 },
-    { component: Scene8CTA, duration: 380 },
-  ]
+  const tr = slide({ direction: 'from-right' })
 
   return (
     <AbsoluteFill style={{ background: C.bg }}>
       <TransitionSeries>
-        {scenes.map((scene, i) => {
-          const SceneComponent = scene.component
-          const isLast = i === scenes.length - 1
+        <TransitionSeries.Sequence durationInFrames={660}>
+          <Scene1Hook durationInFrames={660} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
 
-          return (
-            <React.Fragment key={i}>
-              <TransitionSeries.Sequence durationInFrames={scene.duration}>
-                <SceneComponent durationInFrames={scene.duration} />
-              </TransitionSeries.Sequence>
-              {!isLast && (
-                <TransitionSeries.Transition
-                  presentation={transition}
-                  timing={timing}
-                />
-              )}
-            </React.Fragment>
-          )
-        })}
+        <TransitionSeries.Sequence durationInFrames={840}>
+          <Scene2Pain durationInFrames={840} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={900}>
+          <Scene3Solution durationInFrames={900} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={1950}>
+          <Scene4Services durationInFrames={1950} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={2550}>
+          <Scene5Demo durationInFrames={2550} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={1200}>
+          <Scene6Proof durationInFrames={1200} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={660}>
+          <Scene7Pricing durationInFrames={660} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition presentation={tr} timing={timing} />
+
+        <TransitionSeries.Sequence durationInFrames={380}>
+          <Scene8CTA durationInFrames={380} />
+        </TransitionSeries.Sequence>
       </TransitionSeries>
     </AbsoluteFill>
   )
