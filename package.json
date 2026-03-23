@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "voiceover": "node scripts/generate-voiceover.mjs",
+    "remotion:studio": "remotion studio remotion/index.tsx",
+    "remotion:render": "remotion render remotion/index.tsx MasterDemo --output=output/chiranjib-demo-5min.mp4 --codec=h264"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",
