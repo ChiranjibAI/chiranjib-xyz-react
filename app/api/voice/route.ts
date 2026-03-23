@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { synthesizeSpeech } from '@/lib/gemini-tts'
+import { synthesizeSpeechEdge } from '@/lib/edge-tts'
 
 const VOICE_SCRIPTS: Record<string, string> = {
   home: "Hi, I'm Chiranjib — India's leading AI automation specialist. I build autonomous AI agents, WhatsApp bots, n8n workflows, and complete business automation systems that actually deliver results. Whether you're a startup founder or an established business, I can automate your operations and save you hundreds of hours every month. My projects start at 25,000 rupees and I've automated over 50 businesses across India and globally. To get started, click the Hire Me button or send me a message on Telegram at ChiranjibAI.",
@@ -18,19 +19,29 @@ export async function POST(req: NextRequest) {
     const pageId: string = typeof body?.pageId === 'string' ? body.pageId : 'home'
     const text = VOICE_SCRIPTS[pageId] ?? VOICE_SCRIPTS['home']
 
-    // Try Gemini TTS
-    const audioBuffer = await synthesizeSpeech(text)
-
-    if (audioBuffer) {
-      const base64Audio = audioBuffer.toString('base64')
+    // ── 1. Try Gemini TTS (highest quality) ──────────────────────────────────
+    const geminiBuffer = await synthesizeSpeech(text)
+    if (geminiBuffer) {
       return NextResponse.json({
-        audio: base64Audio,
+        audio: geminiBuffer.toString('base64'),
         mimeType: 'audio/wav',
         source: 'gemini',
       })
     }
 
-    // Fallback: tell client to use browser TTS
+    // ── 2. Try Microsoft Edge TTS (free, no key, great quality) ──────────────
+    console.log('[voice] Gemini failed — trying Edge TTS fallback')
+    const edgeBuffer = await synthesizeSpeechEdge(text)
+    if (edgeBuffer) {
+      return NextResponse.json({
+        audio: edgeBuffer.toString('base64'),
+        mimeType: 'audio/mpeg',
+        source: 'edge',
+      })
+    }
+
+    // ── 3. Browser TTS as last resort ─────────────────────────────────────────
+    console.log('[voice] Edge TTS failed — falling back to browser TTS')
     return NextResponse.json({
       useBrowserTTS: true,
       text,
@@ -38,12 +49,8 @@ export async function POST(req: NextRequest) {
     })
   } catch {
     return NextResponse.json(
-      {
-        useBrowserTTS: true,
-        text: '',
-        source: 'error-fallback',
-      },
-      { status: 200 } // Return 200 so client handles it gracefully
+      { useBrowserTTS: true, text: '', source: 'error-fallback' },
+      { status: 200 }
     )
   }
 }
